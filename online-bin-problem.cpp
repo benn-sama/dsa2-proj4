@@ -39,6 +39,7 @@ int Basket::nextFit() {
         if (bins[binCount - 1]->returnBinSize() + value > 1.0) {
             this->addBin();
         }
+
         bins[binCount - 1]->insert(value);
         value = input->returnValue();
     }
@@ -48,17 +49,31 @@ int Basket::nextFit() {
 
 int Basket::bestFit() {
   this->clearBins();
+  float value = input->returnValue();
 
   while (input->isOpen()) {
     bool fitted = false;
     int index = 0;
     float min = 2.0;
-
+    
     for (int i = 0; i < binCount; ++i) {
-
+      if (bins[i]->returnBinSize() + value < 1.0 && bins[i]->returnBinSize() + value < min) {
+        index = i;
+        min = bins[i]->returnBinSize() + value;
+        fitted = true;
+      }
     }
+
+    if (!fitted) {
+      this->addBin();
+      bins[binCount - 1]->insert(value);
+    }
+
+    bins[index]->insert(value);
+    value = input->returnValue();
   }
-  return 0;
+
+  return binCount;
 }
 
 void Basket::addBin() {
