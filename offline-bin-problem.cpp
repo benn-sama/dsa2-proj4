@@ -37,89 +37,99 @@ void OfflineBasket::perm1() {
 
 // first fit algorithm
 int OfflineBasket::firstFit() {
-    this->clearBins(true);
-    this->fillValues();
-    optimizedBinNum = int(values.size());  // start with worst case
-    permComplete = false;
+  this->clearBins(true);
+  this->fillValues();
+  optimizedBinNum = int(values.size());  // start with worst case
+  permComplete = false;
 
-    while (!permComplete) {
-        this->clearBins(false);
+  while (!permComplete) {
+    this->clearBins(false);
 
-        for (int i = 0; i < int(values.size()); ++i) {
-            float value = values[i];
-            bool fitted = false;
-            
-            // try existing bins first
-            for (int j = 0; j < binCount; ++j) {
-                if (bins[j]->returnBinSize() + value <= 1.0) {
-                    bins[j]->insert(value);
-                    fitted = true;
-                    break;
-                }
-            }
-            
-            // create new bin if needed
-            if (!fitted) {
-              if (binCount >= optimizedBinNum) {
-                this->addBin();
-                bins[binCount - 1]->insert(value);
-            }
-            }
+    for (int i = 0; i < int(values.size()); ++i) {
+      float value = values[i];
+      bool fitted = false;
+          
+      // try existing bins first
+      for (int j = 0; j < binCount; ++j) {
+        if (bins[j]->returnBinSize() + value <= 1.0) {
+          bins[j]->insert(value);
+          fitted = true;
+          break;
         }
-        
-        this->checkMinBin();
-        this->perm1();
-  ++count;
-  std::cout << count << std::endl;
+      }
+
+      // create new bin if needed - removed condition
+      if (!fitted) {
+        this->addBin();
+        bins[binCount - 1]->insert(value);
+      }
     }
 
-    return optimizedBinNum;
+    this->checkMinBin();
+    this->perm1();
+
+    ++count;
+    if (count == 10000000) {
+      break;
+    }
+  }
+
+  count = 0;
+  this->printValues();
+  return optimizedBinNum;
 }
 
 // best fit algorithm
 int OfflineBasket::bestFit() {
-    this->clearBins(true);
-    this->fillValues();
-    optimizedBinNum = int(values.size());
-    permComplete = false;
+  this->clearBins(true);
+  this->fillValues();
+  optimizedBinNum = int(values.size());
+  permComplete = false;
 
-    while (!permComplete) {
-        this->clearBins(false);
+  while (!permComplete) {
+    this->clearBins(false);
 
-        for (int i = 0; i < int(values.size()); ++i) {
-            float value = values[i];
-            bool fitted = false;
-            int index = 0;
-            float min = 2.0;
+    for (int i = 0; i < int(values.size()); ++i) {
+      float value = values[i];
+      bool fitted = false;
+      int index = 0;
+      float min = 2.0;
 
-            // Check all existing bins for best fit
-            for (int j = 0; j < binCount; ++j) {
-                if (bins[j]->returnBinSize() + value <= 1.0) {
-                    float remaining = 1.0 - (bins[j]->returnBinSize() + value);
-                    if (remaining < min) {
-                        min = remaining;
-                        index = j;
-                        fitted = true;
-                    }
-                }
-            }
+      // check all existing bins for best fit
+      for (int j = 0; j < binCount; ++j) {
+        if (bins[j]->returnBinSize() + value <= 1.0) {
+          float remaining = 1.0 - (bins[j]->returnBinSize() + value);
 
-            // Create new bin if no fit found
-            if (!fitted) {
-                this->addBin();
-                bins[binCount - 1]->insert(value);
-            } else {
-                bins[index]->insert(value);
-            }
+          if (remaining < min) {
+            min = remaining;
+            index = j;
+            fitted = true;
+          }
         }
-        
-        this->checkMinBin();
-        this->perm1();
-          ++count;
-  std::cout << count << std::endl;
-    }
+      }
 
-    return optimizedBinNum;
+      // create new bin if no fit found
+      if (!fitted) {
+        this->addBin();
+        bins[binCount - 1]->insert(value);
+      } 
+      else {
+        bins[index]->insert(value);
+      }
+    }
+      
+    this->checkMinBin();
+    this->perm1();
+    ++count;
+
+    if (count == 10000000) {
+      break;
+    }
+  }
+
+  count = 0;
+  this->printValues();
+  return optimizedBinNum;
 }
 
 // adds new bin
@@ -132,23 +142,23 @@ void OfflineBasket::addBin() {
 // parameter is true, allocate  nput
 // if false, don't allocate new input
 void OfflineBasket::clearBins(bool reinitInput) {
-    // Delete all existing bins
-    for (int i = 0; i < int(bins.size()); ++i) {
-        bins[i]->emptyBin();
-        delete bins[i];
+  // Delete all existing bins
+  for (int i = 0; i < int(bins.size()); ++i) {
+    bins[i]->emptyBin();
+      delete bins[i];
     }
-    bins.clear();
+  bins.clear();
 
-    // checks if we need to use another input again
-    if (reinitInput) {
-        delete input;
-        input = new Input;
-        input->openFile();
-    }
+  // checks if we need to use another input again
+  if (reinitInput) {
+    delete input;
+    input = new Input;
+    input->openFile();
+  }
 
-    // Start with one empty bin
-    bins.push_back(new Bin());
-    binCount = 1;
+  // Start with one empty bin
+  bins.push_back(new Bin());
+  binCount = 1;
 }
 
 // checks for new min bin count
@@ -167,17 +177,30 @@ void OfflineBasket::clearValues() {
 }
 
 void OfflineBasket::fillValues() {
-    this->clearValues();
+  this->clearValues();
 
-    while (input->isOpen()) {
-        float value = input->returnValue();
-        if (value > 0.0) {
-            values.push_back(value);
-        }
+  while (input->isOpen()) {
+    float value = input->returnValue();
+    if (value > 0.0) {
+      values.push_back(value);
     }
+  }
     
-    // Sort initially - this ensures we start with the first permutation
-    std::sort(values.begin(), values.end());
+  // sort initially - this ensures we start with the first permutation
+  std::sort(values.begin(), values.end());
+}
+
+// prints all values
+std::string OfflineBasket::printValues() {
+  std::string bucket = "";
+
+  for (int i = 0; i < int(bins.size()); ++i) {
+    bucket += "b" + std::to_string(i) + ": " + bins[i]->printAll() + "\n";
+  }
+
+  valuesPrinted = bucket;
+
+  return valuesPrinted;
 }
 
 // deconstructor

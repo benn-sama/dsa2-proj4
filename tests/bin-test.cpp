@@ -15,7 +15,7 @@ void binTest() {
   std::cout << bin.returnBinSize() << std::endl;
 
   std::cout << "nodes: " << std::endl;
-  bin.printAll();
+  std::cout << bin.printAll() << std::endl;
 }
 
 int main() {
