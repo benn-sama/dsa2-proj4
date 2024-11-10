@@ -60,13 +60,17 @@ int OfflineBasket::firstFit() {
             
             // create new bin if needed
             if (!fitted) {
+              if (binCount >= optimizedBinNum) {
                 this->addBin();
                 bins[binCount - 1]->insert(value);
+            }
             }
         }
         
         this->checkMinBin();
         this->perm1();
+  ++count;
+  std::cout << count << std::endl;
     }
 
     return optimizedBinNum;
@@ -111,6 +115,8 @@ int OfflineBasket::bestFit() {
         
         this->checkMinBin();
         this->perm1();
+          ++count;
+  std::cout << count << std::endl;
     }
 
     return optimizedBinNum;
@@ -177,4 +183,8 @@ void OfflineBasket::fillValues() {
 // deconstructor
 OfflineBasket::~OfflineBasket() {
   delete input;
+
+  for (int i = 0; i < int(bins.size()); ++i) {
+    delete bins[i];
+  }
 }

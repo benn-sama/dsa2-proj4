@@ -18,6 +18,7 @@ class OfflineBasket {
     int optimizedBinNum;
     Input* input;
     bool permComplete;
+    int count = 0;
   public:
     OfflineBasket(); // default constructor
     void perm1(); // permutation algorithm
