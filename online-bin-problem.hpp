@@ -6,19 +6,19 @@
 
 #include <vector>
 
-class Basket {
+class OnlineBasket {
   private:
     std::vector<Bin*> bins;
     Input* input;
     int binCount;
   public:
-    Basket();
+    OnlineBasket();
     int firstFit();
     int nextFit();
     int bestFit();
     void addBin();
     void clearBins();
-    ~Basket();
+    ~OnlineBasket();
 };
 
 #endif

@@ -1,10 +1,10 @@
 #include "online-bin-problem.hpp"
 
-Basket::Basket() {
+OnlineBasket::OnlineBasket() {
   input = new Input();
 }
 
-int Basket::firstFit() {
+int OnlineBasket::firstFit() {
   this->clearBins();
   float value = input->returnValue();
 
@@ -30,7 +30,7 @@ int Basket::firstFit() {
   return binCount;
 }
 
-int Basket::nextFit() {
+int OnlineBasket::nextFit() {
     this->clearBins();
     float value = input->returnValue();
 
@@ -47,7 +47,7 @@ int Basket::nextFit() {
     return binCount;
 }
 
-int Basket::bestFit() {
+int OnlineBasket::bestFit() {
   this->clearBins();
   float value = input->returnValue();
 
@@ -76,13 +76,13 @@ int Basket::bestFit() {
   return binCount;
 }
 
-void Basket::addBin() {
+void OnlineBasket::addBin() {
   bins.push_back(new Bin);
   ++binCount;
 }
 
 // clears bins
-void Basket::clearBins() {
+void OnlineBasket::clearBins() {
     // delete all existing bins
     for (int i = 0; i < binCount; ++i) {
         bins[i]->emptyBin();
@@ -99,6 +99,6 @@ void Basket::clearBins() {
 }
 
 // destructor for input
-Basket::~Basket() {
+OnlineBasket::~OnlineBasket() {
   delete input;
 }
