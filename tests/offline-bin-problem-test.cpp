@@ -7,6 +7,7 @@ void testOBP() {
   
 
   std::cout << "\nFirst Fit Offline Bins: " << basket.firstFit();
+  std::cout << "\nBest Fit Offline Bins: " << basket.bestFit();
 
 }
 

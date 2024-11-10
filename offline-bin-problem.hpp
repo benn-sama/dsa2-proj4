@@ -6,6 +6,9 @@
 
 #include <climits>
 #include <iostream>
+#include <vector>
+#include <algorithm>
+#include <cmath>
 
 class OfflineBasket {
   private: 

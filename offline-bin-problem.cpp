@@ -44,9 +44,9 @@ int OfflineBasket::firstFit() {
 
     while (!permComplete) {
         this->clearBins(false);
-        
-        // process each value in current permutation
-        for (float value : values) {
+
+        for (int i = 0; i < int(values.size()); ++i) {
+            float value = values[i];
             bool fitted = false;
             
             // try existing bins first
@@ -74,7 +74,46 @@ int OfflineBasket::firstFit() {
 
 // best fit algorithm
 int OfflineBasket::bestFit() {
-  return 0;
+    this->clearBins(true);
+    this->fillValues();
+    optimizedBinNum = int(values.size());
+    permComplete = false;
+
+    while (!permComplete) {
+        this->clearBins(false);
+
+        for (int i = 0; i < int(values.size()); ++i) {
+            float value = values[i];
+            bool fitted = false;
+            int index = 0;
+            float min = 2.0;
+
+            // Check all existing bins for best fit
+            for (int j = 0; j < binCount; ++j) {
+                if (bins[j]->returnBinSize() + value <= 1.0) {
+                    float remaining = 1.0 - (bins[j]->returnBinSize() + value);
+                    if (remaining < min) {
+                        min = remaining;
+                        index = j;
+                        fitted = true;
+                    }
+                }
+            }
+
+            // Create new bin if no fit found
+            if (!fitted) {
+                this->addBin();
+                bins[binCount - 1]->insert(value);
+            } else {
+                bins[index]->insert(value);
+            }
+        }
+        
+        this->checkMinBin();
+        this->perm1();
+    }
+
+    return optimizedBinNum;
 }
 
 // adds new bin
