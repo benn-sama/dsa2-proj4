@@ -66,7 +66,7 @@ int main() {
   std::cout << "Offline Algorithm | " << std::setw(12) << "|" << std::endl;
   std::cout << "First Fit         | " << offlineBins[0] << std::setw(11) << "|" << std::endl;
   std::cout << "Best Fit          | " << offlineBins[1] << std::setw(11) << "|" << std::endl;
-  std::cout << "Optimal Bins    | " << trueMin << std::setw(11) << "|" << std::endl;
+  std::cout << "Optimal Bins      | " << trueMin << std::setw(11) << "|" << std::endl;
 
   std::cout << std::endl;
   std::cout << "Online First Fit Values: " << std::endl << onlineFirstFitValues << std::endl;

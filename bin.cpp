@@ -46,7 +46,7 @@ std::string Bin::printAll() {
   std::vector<float> sorted;
   
   // Copy values to temporary vector
-  for (int i = 0; i < minHeap.size(); i++) {
+  for (int i = 0; i < int(minHeap.size()); i++) {
       sorted.push_back(*minHeap[i]);
   }
   
@@ -54,7 +54,7 @@ std::string Bin::printAll() {
   std::sort(sorted.begin(), sorted.end(), std::greater<float>());
   
   // Build output string
-  for (int i = 0; i < sorted.size(); i++) {
+  for (int i = 0; i < int(sorted.size()); i++) {
       buckets += std::to_string(sorted[i]) + " ";
   }
   
